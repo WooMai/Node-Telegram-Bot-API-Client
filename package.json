@@ -1,0 +1,27 @@
+{
+    "name": "tgapi-client",
+    "version": "1.0.1",
+    "description": "Just a simple Telegram Bot API client in Node.js.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/WooMai/Node-Telegram-Bot-API-Client.git"
+    },
+    "keywords": [
+        "telegram",
+        "client library"
+    ],
+    "author": "WooMai",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/WooMai/Node-Telegram-Bot-API-Client/issues"
+    },
+    "homepage": "https://github.com/WooMai/Node-Telegram-Bot-API-Client#readme",
+    "dependencies": {
+        "form-data": "^4.0.0",
+        "make-fetch-happen": "^9.1.0"
+    }
+}
