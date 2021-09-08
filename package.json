@@ -1,6 +1,6 @@
 {
     "name": "tgapi-client",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Just a simple Telegram Bot API client in Node.js.",
     "main": "index.js",
     "scripts": {
