@@ -63,18 +63,18 @@ class Client {
                 }
             })
         } catch (err) {
-            throw new TelegramAPIException(`Fetch failed: ${err.message}`, method)
+            throw new TelegramAPIException(`Fetch failed`, method, -1, {}, err.toString())
         }
 
         let json;
         try {
             json = await rsp.json();
         } catch (err) {
-            throw new TelegramAPIException(`Could not understand API response: ${err.message}`, method)
+            throw new TelegramAPIException(`Could not understand API response`, method, -1, {}, err.toString());
         }
 
         if (!json.ok) {
-            throw new TelegramAPIException(json['description'], method, json['error_code'], json['parameters'] || {})
+            throw new TelegramAPIException(json['description'], method, json['error_code'], json['parameters'] || {}, JSON.stringify(data || {}, null, 4))
         }
 
         return json['result'];
