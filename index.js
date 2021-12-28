@@ -10,12 +10,14 @@ class Client {
      * @param api_endpoint Telegram Bot API HTTP Endpoint
      * @param proxy https://github.com/npm/make-fetch-happen#opts-proxy
      * @param user_agent
+     * @param extra_headers
      */
-    constructor(bot_token, api_endpoint = 'https://api.telegram.org', proxy = null, user_agent = `${pkg.name}/${pkg.version}`) {
+    constructor(bot_token, api_endpoint = 'https://api.telegram.org', proxy = null, user_agent = `${pkg.name}/${pkg.version}`, extra_headers = {}) {
         this.bot_token = bot_token;
         this.api_endpoint = api_endpoint;
         this.proxy = proxy;
         this.user_agent = user_agent;
+        this.extra_headers = extra_headers;
     }
 
     async request(method, data = null) {
@@ -59,7 +61,8 @@ class Client {
                 headers: {
                     'User-Agent': this.user_agent,
                     'X-Powered-By': `Node-Telegram-Bot-API-Client/${pkg.version} (+${pkg.homepage})`,
-                    ...ext_headers
+                    ...ext_headers,
+                    ...this.extra_headers
                 }
             })
         } catch (err) {
