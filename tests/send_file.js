@@ -1,4 +1,4 @@
-const Client = require('../index')
+const { Client } = require('../index')
 const File = require('../utils/File')
 const path = require('path')
 
