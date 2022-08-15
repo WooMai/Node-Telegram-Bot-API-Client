@@ -43,7 +43,8 @@ class Client {
                 ext_headers = form.getHeaders();
                 body = form;
             } else {
-                body = new URLSearchParams(data)
+                ext_headers = { 'Content-Type': 'application/json' };
+                body = JSON.stringify(data)
             }
 
         } else {
