@@ -75,7 +75,7 @@ class Client {
 
         // check if rsp is json
         let json;
-        if (rsp.header('content-type').includes('json')) {
+        if (rsp.headers.get('content-type').includes('json')) {
             try {
                 json = await rsp.json();
             } catch (err) {
