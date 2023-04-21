@@ -10,12 +10,14 @@ class Client {
      * @param api_endpoint Telegram Bot API HTTP Endpoint
      * @param proxy https://github.com/npm/make-fetch-happen#opts-proxy
      * @param extra_headers
+     * @param debug
      */
-    constructor(bot_token, api_endpoint = null, proxy = null, extra_headers = {}) {
+    constructor(bot_token, api_endpoint = null, proxy = null, extra_headers = {}, debug = false) {
         this.bot_token = bot_token;
         this.api_endpoint = api_endpoint ?? 'https://api.telegram.org';
         this.proxy = proxy;
         this.extra_headers = extra_headers;
+        this.debug = debug;
     }
 
     async request(method, data = null, timeout = null) {
@@ -43,7 +45,7 @@ class Client {
                 ext_headers = form.getHeaders();
                 body = form;
             } else {
-                ext_headers = { 'Content-Type': 'application/json' };
+                ext_headers = {'Content-Type': 'application/json'};
                 body = JSON.stringify(data)
             }
 
@@ -65,14 +67,29 @@ class Client {
                 }
             })
         } catch (err) {
+            if (this.debug) {
+                console.error('[tgapi-client Error]', `${method} Fetch failed`, err.stack);
+            }
             throw new TelegramAPIException(`Fetch failed`, method, -1, {}, err.toString())
         }
 
+        // check if rsp is json
         let json;
-        try {
-            json = await rsp.json();
-        } catch (err) {
-            throw new TelegramAPIException(`Could not understand API response`, method, -1, {}, err.toString());
+        if (rsp.header('content-type').includes('json')) {
+            try {
+                json = await rsp.json();
+            } catch (err) {
+                if (this.debug) {
+                    console.error('[tgapi-client Error]', `${method} JSON Body parse failed`, rsp.text(), err.stack);
+                }
+                throw new TelegramAPIException(`Could not understand API response`, method, -1, {}, err.toString());
+            }
+        } else {
+            const text = await rsp.text();
+            if (this.debug) {
+                console.error('[tgapi-client Error]', `${method} Body parse failed:`, text);
+            }
+            throw new TelegramAPIException(`Could not understand API response`, method, -1);
         }
 
         if (!json.ok) {
@@ -83,4 +100,4 @@ class Client {
     }
 }
 
-module.exports = { Client, FormData };
+module.exports = {Client, FormData};
