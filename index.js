@@ -21,6 +21,8 @@ class Client {
     }
 
     async request(method, data = null, timeout = null) {
+        const timeout_ms = parseInt(timeout ?? '20000');
+
         let body;
         let ext_headers = {};
         if (data && typeof data === 'object') {
@@ -59,7 +61,7 @@ class Client {
                 proxy: this.proxy,
                 method: 'POST',
                 body: body,
-                timeout: parseInt(timeout ?? '20000'),
+                timeout: timeout_ms,
                 headers: {
                     'User-Agent': `Node-Telegram-Bot-API-Client/${pkg.version} (+${pkg.homepage})`,
                     ...ext_headers,
@@ -68,7 +70,10 @@ class Client {
             })
         } catch (err) {
             if (this.debug) {
-                console.error('[tgapi-client Error]', `${method} Fetch failed`, err.stack);
+                console.error('[tgapi-client Error]', `${method} Fetch failed`, {
+                    timeout: timeout_ms,
+                    proxy: this.proxy
+                }, err.stack);
             }
             throw new TelegramAPIException(`Fetch failed`, method, -1, {}, err.toString())
         }
